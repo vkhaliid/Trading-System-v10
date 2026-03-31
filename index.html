@@ -36,25 +36,28 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
 .ring-bg{stroke:#21262d}
 .ring-fg{stroke:#388bfd;stroke-linecap:round;transition:stroke-dashoffset 1s linear}
 .ring-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;color:#8b949e}
-.src-badge{margin-left:auto;display:flex;align-items:center;gap:6px;padding:4px 10px;background:#161b22;border:1px solid #30363d;border-radius:20px;font-size:11px;color:#8b949e}
+.prog-wrap{margin-bottom:12px}
+.prog-label{font-size:11px;color:#8b949e;margin-bottom:4px;display:none}
+.prog-bar{height:3px;background:#21262d;border-radius:2px;overflow:hidden;display:none}
+.prog-fill{height:100%;background:#388bfd;border-radius:2px;transition:width .4s ease;width:0}
 .tbox{background:#161b22;border:1px solid #30363d;border-radius:14px;overflow:hidden;margin-bottom:16px}
 table{width:100%;border-collapse:collapse}
 thead{background:#1c2128;border-bottom:1px solid #21262d}
 th{padding:10px 16px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:#8b949e;text-align:left;white-space:nowrap}
 th:not(:first-child){text-align:right}
-td{padding:14px 16px;border-bottom:1px solid #21262d;vertical-align:middle;transition:background .15s}
+td{padding:14px 16px;border-bottom:1px solid #21262d;vertical-align:middle}
 tbody tr:last-child td{border-bottom:none}
 td:not(:first-child){text-align:right}
 tbody tr:hover{background:#1c2128}
 .symcell{display:flex;align-items:center;gap:10px}
 .symico{width:36px;height:36px;border-radius:7px;background:#1c2128;border:1px solid #30363d;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;flex-shrink:0}
-.symt{font-weight:700;font-size:13px;letter-spacing:.02em}
+.symt{font-weight:700;font-size:13px}
 .symn{font-size:11px;color:#8b949e}
-.price{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600}
-@keyframes flashUp{0%,100%{color:#e6edf3}30%{color:#3fb950;background:rgba(63,185,80,.08);border-radius:4px}}
-@keyframes flashDn{0%,100%{color:#e6edf3}30%{color:#f85149;background:rgba(248,81,73,.08);border-radius:4px}}
-.flash-up{animation:flashUp 1.5s ease}
-.flash-dn{animation:flashDn 1.5s ease}
+.price{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:#e6edf3}
+@keyframes flashUp{0%,100%{color:#e6edf3}40%{color:#3fb950}}
+@keyframes flashDn{0%,100%{color:#e6edf3}40%{color:#f85149}}
+.fup{animation:flashUp 1.4s ease}
+.fdn{animation:flashDn 1.4s ease}
 .vv{font-family:'JetBrains Mono',monospace;font-size:12px;color:#8b949e}
 .spktag{font-size:11px;font-weight:600;color:#e3b341;margin-top:2px}
 .chip{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:20px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600}
@@ -67,15 +70,15 @@ tbody tr:hover{background:#1c2128}
 .sig.hold{background:rgba(139,148,158,.1);color:#8b949e;border-color:rgba(139,148,158,.2)}
 .sig.na{background:#1c2128;color:#484f58;border-color:#30363d}
 .notescell{font-size:11px;color:#8b949e}
-.shimmer{display:inline-block;height:14px;border-radius:4px;background:linear-gradient(90deg,#21262d 25%,#30363d 50%,#21262d 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
-@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.shimmer{display:inline-block;height:14px;border-radius:4px;background:linear-gradient(90deg,#21262d 25%,#30363d 50%,#21262d 75%);background-size:200% 100%;animation:sh 1.5s infinite}
+@keyframes sh{0%{background-position:-200% 0}100%{background-position:200% 0}}
 .footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:11px;color:#484f58;padding-top:4px}
-.err-banner{background:#1c2128;border:1px solid #f85149;border-radius:8px;padding:10px 16px;font-size:12px;color:#ff7b72;margin-bottom:12px;display:none}
-.toastbox{position:fixed;bottom:20px;right:20px;z-index:1000;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toastbox{position:fixed;bottom:20px;right:20px;z-index:999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
 .toast{padding:10px 16px;background:#1c2128;border:1px solid #30363d;border-radius:8px;font-size:12px;color:#e6edf3;box-shadow:0 8px 24px rgba(0,0,0,.6);max-width:280px;pointer-events:auto}
 .toast.ok{border-color:#3fb950;color:#3fb950}
 .toast.err{border-color:#f85149;color:#f85149}
-@media(max-width:700px){.stats{grid-template-columns:1fr 1fr}.symn,th:nth-child(3),td:nth-child(3){display:none}.src-badge{display:none}}
+.toast.warn{border-color:#e3b341;color:#e3b341}
+@media(max-width:700px){.stats{grid-template-columns:1fr 1fr}.symn,th:nth-child(3),td:nth-child(3){display:none}}
 @media(max-width:420px){.stats{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
@@ -95,7 +98,7 @@ tbody tr:hover{background:#1c2128}
     </div>
     <div>
       <div class="brand-name">Trading Dashboard Pro</div>
-      <div class="brand-sub">Real-time signals &mdash; No API key needed</div>
+      <div class="brand-sub">Powered by Finnhub &mdash; Auto-refresh every 45s</div>
     </div>
   </div>
   <div class="hcontrols">
@@ -113,26 +116,10 @@ tbody tr:hover{background:#1c2128}
   </div>
 </header>
 <div class="stats">
-  <div class="scard">
-    <div class="scard-label">Call Signals</div>
-    <div class="scard-val" id="s-call" style="color:#58a6ff">-</div>
-    <div class="scard-desc">Bullish momentum</div>
-  </div>
-  <div class="scard">
-    <div class="scard-label">Put Signals</div>
-    <div class="scard-val" id="s-put" style="color:#ff7b72">-</div>
-    <div class="scard-desc">Bearish momentum</div>
-  </div>
-  <div class="scard">
-    <div class="scard-label">Hold</div>
-    <div class="scard-val" id="s-hold" style="color:#8b949e">-</div>
-    <div class="scard-desc">Sideways / unclear</div>
-  </div>
-  <div class="scard">
-    <div class="scard-label">Vol Spikes</div>
-    <div class="scard-val" id="s-spike" style="color:#e3b341">-</div>
-    <div class="scard-desc">Unusual volume</div>
-  </div>
+  <div class="scard"><div class="scard-label">Call Signals</div><div class="scard-val" id="s-call" style="color:#58a6ff">-</div><div class="scard-desc">Bullish momentum</div></div>
+  <div class="scard"><div class="scard-label">Put Signals</div><div class="scard-val" id="s-put" style="color:#ff7b72">-</div><div class="scard-desc">Bearish momentum</div></div>
+  <div class="scard"><div class="scard-label">Hold</div><div class="scard-val" id="s-hold" style="color:#8b949e">-</div><div class="scard-desc">Sideways / unclear</div></div>
+  <div class="scard"><div class="scard-label">Vol Spikes</div><div class="scard-val" id="s-spike" style="color:#e3b341">-</div><div class="scard-desc">Unusual volume</div></div>
 </div>
 <div class="timer-bar">
   <div class="timer">
@@ -141,31 +128,26 @@ tbody tr:hover{background:#1c2128}
         <circle class="ring-bg" cx="14" cy="14" r="11"/>
         <circle class="ring-fg" id="ring" cx="14" cy="14" r="11" stroke-dasharray="69.1" stroke-dashoffset="0"/>
       </svg>
-      <span class="ring-num" id="cnum">30</span>
+      <span class="ring-num" id="cnum">45</span>
     </div>
     <span>next refresh</span>
   </div>
-  <div class="src-badge">Yahoo Finance &bull; 15 min delay</div>
 </div>
-<div class="err-banner" id="err-banner"></div>
+<div class="prog-wrap">
+  <div class="prog-label" id="prog-label"></div>
+  <div class="prog-bar" id="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
+</div>
 <div class="tbox">
   <table>
     <thead>
-      <tr>
-        <th>Symbol</th>
-        <th>Price (USD)</th>
-        <th>Volume</th>
-        <th>Change %</th>
-        <th>Signal</th>
-        <th>Notes</th>
-      </tr>
+      <tr><th>Symbol</th><th>Price (USD)</th><th>Volume</th><th>Change %</th><th>Signal</th><th>Notes</th></tr>
     </thead>
     <tbody id="tbody"></tbody>
   </table>
 </div>
 <div class="footer">
-  <span id="upd">Loading...</span>
-  <span>Yahoo Finance &mdash; For informational purposes only, not financial advice</span>
+  <span id="upd">Loading data...</span>
+  <span>Finnhub.io &mdash; For informational purposes only, not financial advice</span>
 </div>
 </div>
 <div class="toastbox" id="toasts"></div>
@@ -180,16 +162,16 @@ var SYMS=[
   {s:'MSFT',n:'Microsoft Corp.',c:'#00a4ef'},
   {s:'AMZN',n:'Amazon.com',c:'#ff9900'}
 ];
-var REFRESH=30;
+var REFRESH=45;
+var API_KEY='d75tlk1r01qm4b7s61sgd75tlk1r01qm4b7s61t0';
 var prevPrices={};
 var counts={call:0,put:0,hold:0,spike:0};
 var countdown=REFRESH;
 var mainTimer=null;
 var loading=false;
-var PROXIES=['https://corsproxy.io/?','https://api.allorigins.win/raw?url='];
-var proxyIdx=0;
-var YF_URL='https://query1.finance.yahoo.com/v7/finance/quote?symbols='+SYMS.map(function(x){return x.s;}).join(',')+'&fields=regularMarketPrice,regularMarketVolume,regularMarketChangePercent';
-document.addEventListener('DOMContentLoaded',function(){buildRows();checkMarket();setInterval(checkMarket,60000);fetchAll();});
+var fetchIdx=0;
+var DELAY=1200;
+document.addEventListener('DOMContentLoaded',function(){buildRows();checkMarket();setInterval(checkMarket,60000);startFetch();});
 function isMarketOpen(){
   var now=new Date(),day=now.getUTCDay();
   if(day===0||day===6)return false;
@@ -212,74 +194,18 @@ function buildRows(){
     h+='<td><span class="shimmer" style="width:70px"></span></td>';
     h+='<td><span class="shimmer" style="width:50px"></span></td>';
     h+='<td><span class="shimmer" style="width:60px;border-radius:20px"></span></td>';
-    h+='<td><span class="shimmer" style="width:60px;border-radius:6px"></span></td>';
+    h+='<td><span class="shimmer" style="width:55px;border-radius:6px"></span></td>';
     h+='<td class="notescell" id="note-'+s.s+'"></td></tr>';
   }
   document.getElementById('tbody').innerHTML=h;
 }
-function fetchAll(){
+function startFetch(){
   if(loading)return;
-  loading=true;
+  loading=true;fetchIdx=0;
+  counts={call:0,put:0,hold:0,spike:0};
   document.getElementById('ref-btn').disabled=true;
-  document.getElementById('err-banner').style.display='none';
-  tryFetch(proxyIdx);
+  showProg(true);fetchNext();
 }
-function tryFetch(idx){
-  if(idx>=PROXIES.length){
-    loading=false;document.getElementById('ref-btn').disabled=false;
-    var b=document.getElementById('err-banner');b.textContent='Could not reach Yahoo Finance. Check connection and refresh.';b.style.display='block';
-    startCountdown();return;
-  }
-  fetch(PROXIES[idx]+encodeURIComponent(YF_URL),{cache:'no-store'})
-    .then(function(r){if(!r.ok)throw 0;return r.json();})
-    .then(function(d){
-      var res=d&&d.quoteResponse&&d.quoteResponse.result;
-      if(!res||!res.length)throw 0;
-      proxyIdx=idx;loading=false;document.getElementById('ref-btn').disabled=false;
-      counts={call:0,put:0,hold:0,spike:0};
-      for(var i=0;i<res.length;i++)fillRow(res[i]);
-      updateStats();
-      document.getElementById('upd').textContent='Last updated: '+new Date().toLocaleTimeString();
-      startCountdown();
-    }).catch(function(){tryFetch(idx+1);});
-}
-function fillRow(q){
-  var sym=q.symbol,row=document.getElementById('row-'+sym);
-  if(!row)return;
-  var td=row.querySelectorAll('td');
-  var price=q.regularMarketPrice||0,vol=q.regularMarketVolume||0,pct=q.regularMarketChangePercent||0;
-  var prev=prevPrices[sym],dir=prev!=null?(price>prev?'up':price<prev?'dn':''):'';
-  prevPrices[sym]=price;
-  td[1].innerHTML='<span class="price'+(dir?' flash-'+dir:'')+'">$'+price.toFixed(2)+'</span>';
-  var spk=vol>1000000;if(spk)counts.spike++;
-  td[2].innerHTML='<div class="vv">'+fvol(vol)+'</div>'+(spk?'<div class="spktag">&#9889; Spike</div>':'');
-  var sign=pct>=0?'+':'',cls=pct>0.1?'up':pct<-0.1?'dn':'fl',arr=pct>0.1?'&#9650;':pct<-0.1?'&#9660;':'&#8212;';
-  td[3].innerHTML='<span class="chip '+cls+'">'+arr+' '+sign+pct.toFixed(2)+'%</span>';
-  var sc,st;
-  if(pct>1){sc='call';st='CALL';counts.call++;}
-  else if(pct<-1){sc='put';st='PUT';counts.put++;}
-  else{sc='hold';st='HOLD';counts.hold++;}
-  td[4].innerHTML='<span class="sig '+sc+'">'+st+'</span>';
-  var notes=[];if(spk)notes.push('Vol spike');if(Math.abs(pct)>3)notes.push('Strong');if(Math.abs(pct)>5)notes.push('Extreme');
-  var nel=document.getElementById('note-'+sym);if(nel)nel.textContent=notes.join(' · ');
-}
-function updateStats(){
-  document.getElementById('s-call').textContent=counts.call;
-  document.getElementById('s-put').textContent=counts.put;
-  document.getElementById('s-hold').textContent=counts.hold;
-  document.getElementById('s-spike').textContent=counts.spike;
-}
-function startCountdown(){
-  clearInterval(mainTimer);countdown=REFRESH;
-  mainTimer=setInterval(function(){
-    countdown--;
-    document.getElementById('cnum').textContent=countdown;
-    document.getElementById('ring').style.strokeDashoffset=69.1*(1-countdown/REFRESH);
-    if(countdown<=0){clearInterval(mainTimer);fetchAll();}
-  },1000);
-}
-function manualRefresh(){if(loading)return;clearInterval(mainTimer);buildRows();fetchAll();}
-function fvol(n){if(n>=1e9)return(n/1e9).toFixed(1)+'B';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(0)+'K';return String(n);}
-</script>
-</body>
-</html>
+function fetchNext(){
+  if(fetchIdx>=SYMS.length){
+    loa
