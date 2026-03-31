@@ -1,34 +1,316 @@
-
-Trading Dashboard Pro
-Real-time signals powered by Alpha Vantage
-
-Checking...
-
-Refresh
-CALL SIGNALS
--
-Bullish momentum
-PUT SIGNALS
--
-Bearish momentum
-HOLD
--
-Sideways / unclear
-VOL SPIKES
--
-Unusual volume
-API Key:
-
-Save and Load
-
-60
-next refresh
-SYMBOL
-PRICE (USD)
-VOLUME
-CHANGE %
-SIGNAL
-NOTES
-
-Not yet loaded
-Data: Alpha Vantage - For informational purposes only, not financial advice
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trading Dashboard Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#0d1117;color:#e6edf3;font-size:14px}
+button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
+.page{max-width:1280px;margin:0 auto;padding:20px 16px 64px}
+.header{display:flex;align-items:center;justify-content:space-between;padding-bottom:18px;border-bottom:1px solid #21262d;margin-bottom:24px;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:40px;height:40px;background:#161b22;border:1px solid #30363d;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.brand-name{font-size:17px;font-weight:700;letter-spacing:-0.02em;color:#e6edf3}
+.brand-sub{font-size:11px;color:#8b949e;margin-top:2px}
+.hcontrols{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.market-badge{display:flex;align-items:center;gap:6px;padding:5px 12px;background:#161b22;border:1px solid #30363d;border-radius:20px;font-size:12px;color:#8b949e}
+.dot{width:7px;height:7px;border-radius:50%;background:#3fb950;flex-shrink:0}
+.dot.off{background:#f85149}
+.btn-outline{display:flex;align-items:center;gap:6px;padding:6px 14px;background:#161b22;border:1px solid #30363d;border-radius:6px;font-size:12px;color:#8b949e;transition:all 0.15s}
+.btn-outline:hover{background:#21262d;color:#e6edf3}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.scard{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:16px 18px}
+.scard-label{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:#8b949e;margin-bottom:8px}
+.scard-val{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:600;line-height:1}
+.scard-desc{font-size:11px;color:#8b949e;margin-top:5px}
+.apibar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.apibar label{font-size:12px;color:#8b949e;white-space:nowrap}
+.apibar-row{display:flex;gap:8px;flex:1;min-width:240px;max-width:420px}
+.apiin{flex:1;padding:7px 11px;background:#161b22;border:1px solid #30363d;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#e6edf3;outline:none}
+.apiin:focus{border-color:#388bfd;box-shadow:0 0 0 3px rgba(56,139,253,0.1)}
+.btn-primary{padding:7px 16px;background:#388bfd;color:#fff;border-radius:6px;font-size:12px;font-weight:600;white-space:nowrap;transition:opacity .15s}
+.btn-primary:hover{opacity:.85}
+.timer{display:flex;align-items:center;gap:8px;font-size:12px;color:#8b949e;margin-left:auto}
+.ring{position:relative;width:28px;height:28px;flex-shrink:0}
+.ring svg{display:block;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:3}
+.ring-bg{stroke:#21262d}
+.ring-fg{stroke:#388bfd;stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+.ring-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;color:#8b949e}
+.tbox{background:#161b22;border:1px solid #30363d;border-radius:14px;overflow:hidden;margin-bottom:16px}
+table{width:100%;border-collapse:collapse}
+thead{background:#1c2128;border-bottom:1px solid #21262d}
+th{padding:10px 16px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:#8b949e;text-align:left;white-space:nowrap}
+th:not(:first-child){text-align:right}
+td{padding:14px 16px;border-bottom:1px solid #21262d;vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+td:not(:first-child){text-align:right}
+tbody tr:hover{background:#1c2128}
+.symcell{display:flex;align-items:center;gap:10px}
+.symico{width:36px;height:36px;border-radius:7px;background:#1c2128;border:1px solid #30363d;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;flex-shrink:0}
+.symt{font-weight:700;font-size:13px;letter-spacing:.02em}
+.symn{font-size:11px;color:#8b949e}
+.price{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#e6edf3}
+.price.up{color:#3fb950}
+.price.dn{color:#f85149}
+.vv{font-family:'JetBrains Mono',monospace;font-size:12px;color:#8b949e}
+.spktag{font-size:11px;font-weight:600;color:#e3b341;margin-top:2px}
+.chip{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:20px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600}
+.chip.up{background:rgba(63,185,80,.12);color:#3fb950}
+.chip.dn{background:rgba(248,81,73,.12);color:#f85149}
+.chip.fl{background:rgba(139,148,158,.1);color:#8b949e}
+.sig{display:inline-flex;align-items:center;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:700;letter-spacing:.04em;border:1px solid transparent}
+.sig.call{background:rgba(56,139,253,.12);color:#58a6ff;border-color:rgba(56,139,253,.3)}
+.sig.put{background:rgba(248,81,73,.12);color:#ff7b72;border-color:rgba(248,81,73,.3)}
+.sig.hold{background:rgba(139,148,158,.1);color:#8b949e;border-color:rgba(139,148,158,.2)}
+.sig.na{background:#1c2128;color:#484f58;border-color:#30363d}
+.notescell{font-size:11px;color:#8b949e;min-width:80px}
+.loading-bar{display:inline-block;width:60px;height:12px;border-radius:4px;background:#21262d;opacity:.6}
+.footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:11px;color:#484f58;padding-top:4px}
+.toastbox{position:fixed;bottom:20px;right:20px;z-index:1000;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{padding:10px 16px;background:#1c2128;border:1px solid #30363d;border-radius:8px;font-size:12px;color:#e6edf3;box-shadow:0 8px 24px rgba(0,0,0,.6);max-width:280px;pointer-events:auto}
+.toast.ok{border-color:#3fb950;color:#3fb950}
+.toast.err{border-color:#f85149;color:#f85149}
+@media(max-width:700px){.stats{grid-template-columns:1fr 1fr}.symn,.notescell,th:nth-child(3),td:nth-child(3){display:none}.timer{margin-left:0}}
+@media(max-width:420px){.stats{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+<div class="page">
+<header class="header">
+  <div class="brand">
+    <div class="logo">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <rect x="2" y="10" width="4" height="8" rx="1" fill="#3fb950"/>
+        <line x1="4" y1="7" x2="4" y2="10" stroke="#3fb950" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="4" y1="18" x2="4" y2="20" stroke="#3fb950" stroke-width="1.5" stroke-linecap="round"/>
+        <rect x="9" y="5" width="4" height="10" rx="1" fill="#388bfd"/>
+        <line x1="11" y1="2" x2="11" y2="5" stroke="#388bfd" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="11" y1="15" x2="11" y2="18" stroke="#388bfd" stroke-width="1.5" stroke-linecap="round"/>
+        <rect x="16" y="8" width="4" height="7" rx="1" fill="#f85149"/>
+        <line x1="18" y1="5" x2="18" y2="8" stroke="#f85149" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="18" y1="15" x2="18" y2="18" stroke="#f85149" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div>
+      <div class="brand-name">Trading Dashboard Pro</div>
+      <div class="brand-sub">Real-time signals powered by Alpha Vantage</div>
+    </div>
+  </div>
+  <div class="hcontrols">
+    <div class="market-badge">
+      <span class="dot" id="mkt-dot"></span>
+      <span id="mkt-txt">Checking...</span>
+    </div>
+    <button class="btn-outline" onclick="manualRefresh()">
+      <svg id="ref-ico" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <polyline points="23 4 23 10 17 10"/>
+        <polyline points="1 20 1 14 7 14"/>
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+      </svg>
+      Refresh
+    </button>
+  </div>
+</header>
+<div class="stats">
+  <div class="scard">
+    <div class="scard-label">Call Signals</div>
+    <div class="scard-val" id="s-call" style="color:#58a6ff">-</div>
+    <div class="scard-desc">Bullish momentum</div>
+  </div>
+  <div class="scard">
+    <div class="scard-label">Put Signals</div>
+    <div class="scard-val" id="s-put" style="color:#ff7b72">-</div>
+    <div class="scard-desc">Bearish momentum</div>
+  </div>
+  <div class="scard">
+    <div class="scard-label">Hold</div>
+    <div class="scard-val" id="s-hold" style="color:#8b949e">-</div>
+    <div class="scard-desc">Sideways / unclear</div>
+  </div>
+  <div class="scard">
+    <div class="scard-label">Vol Spikes</div>
+    <div class="scard-val" id="s-spike" style="color:#e3b341">-</div>
+    <div class="scard-desc">Unusual volume</div>
+  </div>
+</div>
+<div class="apibar">
+  <label for="api-in">API Key:</label>
+  <div class="apibar-row">
+    <input class="apiin" type="password" id="api-in" placeholder="Paste your Alpha Vantage API key..." autocomplete="off">
+    <button class="btn-primary" onclick="saveKey()">Save and Load</button>
+  </div>
+  <div class="timer">
+    <div class="ring">
+      <svg width="28" height="28" viewBox="0 0 28 28">
+        <circle class="ring-bg" cx="14" cy="14" r="11"/>
+        <circle class="ring-fg" id="ring" cx="14" cy="14" r="11" stroke-dasharray="69.1" stroke-dashoffset="0"/>
+      </svg>
+      <span class="ring-num" id="cnum">60</span>
+    </div>
+    <span>next refresh</span>
+  </div>
+</div>
+<div class="tbox">
+  <table>
+    <thead>
+      <tr>
+        <th>Symbol</th>
+        <th>Price (USD)</th>
+        <th>Volume</th>
+        <th>Change %</th>
+        <th>Signal</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+<div class="footer">
+  <span id="upd">Not yet loaded</span>
+  <span>Data: Alpha Vantage - For informational purposes only, not financial advice</span>
+</div>
+</div>
+<div class="toastbox" id="toasts"></div>
+<script>
+var SYMS=[{s:'NVDA',n:'NVIDIA Corp.',c:'#76b900'},{s:'AAPL',n:'Apple Inc.',c:'#a2aaad'},{s:'TSLA',n:'Tesla Inc.',c:'#e31937'},{s:'QQQ',n:'Invesco QQQ ETF',c:'#00a1e4'},{s:'META',n:'Meta Platforms',c:'#0082fb'},{s:'AMD',n:'AMD Inc.',c:'#ed1c24'},{s:'MSFT',n:'Microsoft Corp.',c:'#00a4ef'},{s:'AMZN',n:'Amazon.com',c:'#ff9900'}];
+var API_KEY='R15Z3TWYXY4ORN07';
+var prevPrices={};
+var counts={call:0,put:0,hold:0,spike:0};
+var countdown=60;
+var timer=null;
+var loading=false;
+document.addEventListener('DOMContentLoaded',function(){
+  document.getElementById('api-in').value=API_KEY;
+  buildRows();checkMarket();fetchAll();startTimer();
+});
+function buildRows(){
+  var h='';
+  for(var i=0;i<SYMS.length;i++){
+    var s=SYMS[i];
+    h+='<tr id="row-'+s.s+'">';
+    h+='<td><div class="symcell"><div class="symico" style="color:'+s.c+'">'+s.s.slice(0,2)+'</div>';
+    h+='<div><div class="symt">'+s.s+'</div><div class="symn">'+s.n+'</div></div></div></td>';
+    h+='<td><span class="loading-bar" style="width:65px"></span></td>';
+    h+='<td><span class="loading-bar" style="width:50px"></span></td>';
+    h+='<td><span class="loading-bar" style="width:55px;border-radius:20px"></span></td>';
+    h+='<td><span class="loading-bar" style="width:60px;border-radius:6px"></span></td>';
+    h+='<td class="notescell" id="note-'+s.s+'"></td></tr>';
+  }
+  document.getElementById('tbody').innerHTML=h;
+}
+function fetchAll(){
+  if(loading)return;
+  loading=true;
+  counts={call:0,put:0,hold:0,spike:0};
+  var b1=SYMS.slice(0,4),b2=SYMS.slice(4);
+  runBatch(b1,function(){
+    setTimeout(function(){
+      runBatch(b2,function(){
+        updateStats();
+        document.getElementById('upd').textContent='Last updated: '+new Date().toLocaleTimeString();
+        loading=false;
+      });
+    },13000);
+  });
+}
+function runBatch(batch,cb){
+  var left=batch.length;
+  for(var i=0;i<batch.length;i++){
+    (function(sym){fetchSym(sym,function(){if(--left===0)cb();});})(batch[i].s);
+  }
+}
+function fetchSym(sym,cb){
+  if(!API_KEY){cb();return;}
+  fetch('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol='+sym+'&apikey='+API_KEY)
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d['Note']||d['Information']){showToast('Rate limit. Wait 1 min.','err');setErr(sym);cb();return;}
+      var q=d['Global Quote'];
+      if(!q||!q['05. price']){setErr(sym);cb();return;}
+      var price=parseFloat(q['05. price']);
+      var vol=parseInt(q['06. volume']);
+      var pct=parseFloat(q['10. change percent']);
+      var prev=prevPrices[sym];
+      prevPrices[sym]=price;
+      fillRow(sym,price,vol,pct,prev);cb();
+    }).catch(function(){setErr(sym);cb();});
+}
+function fillRow(sym,price,vol,pct,prev){
+  var row=document.getElementById('row-'+sym);
+  if(!row)return;
+  var td=row.querySelectorAll('td');
+  var pc='price'+(prev!=null?(price>prev?' up':price<prev?' dn':''):'');
+  td[1].innerHTML='<span class="'+pc+'">$'+price.toFixed(2)+'</span>';
+  if(prev!=null&&price!==prev){var c1=td[1];setTimeout(function(){var el=c1.querySelector('.price');if(el)el.className='price';},1500);}
+  var spike=vol>1000000;
+  if(spike)counts.spike++;
+  td[2].innerHTML='<div class="vv">'+fvol(vol)+'</div>'+(spike?'<div class="spktag">Spike</div>':'');
+  var sign=pct>=0?'+':'';
+  td[3].innerHTML='<span class="chip '+(pct>0.1?'up':pct<-0.1?'dn':'fl')+'">'+(pct>0.1?'UP':pct<-0.1?'DN':'--')+' '+sign+pct.toFixed(2)+'%</span>';
+  var sc,st;
+  if(pct>1){sc='call';st='CALL';counts.call++;}
+  else if(pct<-1){sc='put';st='PUT';counts.put++;}
+  else{sc='hold';st='HOLD';counts.hold++;}
+  td[4].innerHTML='<span class="sig '+sc+'">'+st+'</span>';
+  var notes=[];
+  if(spike)notes.push('Vol spike');
+  if(Math.abs(pct)>3)notes.push('Strong move');
+  var nel=document.getElementById('note-'+sym);
+  if(nel)nel.textContent=notes.join(' - ');
+}
+function setErr(sym){
+  var row=document.getElementById('row-'+sym);if(!row)return;
+  var td=row.querySelectorAll('td');
+  td[1].innerHTML='<span style="color:#484f58">Error</span>';
+  td[2].innerHTML='<span style="color:#484f58">-</span>';
+  td[3].innerHTML='<span style="color:#484f58">-</span>';
+  td[4].innerHTML='<span class="sig na">N/A</span>';
+}
+function updateStats(){
+  document.getElementById('s-call').textContent=counts.call;
+  document.getElementById('s-put').textContent=counts.put;
+  document.getElementById('s-hold').textContent=counts.hold;
+  document.getElementById('s-spike').textContent=counts.spike;
+}
+function checkMarket(){
+  var now=new Date(),day=now.getUTCDay(),mins=now.getUTCHours()*60+now.getUTCMinutes();
+  var open=day>=1&&day<=5&&mins>=870&&mins<1260;
+  document.getElementById('mkt-dot').className=open?'dot':'dot off';
+  document.getElementById('mkt-txt').textContent=open?'Market Open':'Market Closed';
+}
+function startTimer(){
+  countdown=60;clearInterval(timer);
+  timer=setInterval(function(){
+    countdown--;
+    document.getElementById('cnum').textContent=countdown;
+    document.getElementById('ring').style.strokeDashoffset=69.1*(1-countdown/60);
+    if(countdown<=0){countdown=60;fetchAll();}
+  },1000);
+}
+function manualRefresh(){if(loading)return;buildRows();fetchAll();startTimer();}
+function saveKey(){
+  var v=document.getElementById('api-in').value.trim();
+  if(!v){showToast('Enter your API key','err');return;}
+  API_KEY=v;showToast('Key saved!','ok');buildRows();fetchAll();startTimer();
+}
+function fvol(n){
+  if(n>=1000000000)return(n/1000000000).toFixed(1)+'B';
+  if(n>=1000000)return(n/1000000).toFixed(1)+'M';
+  if(n>=1000)return(n/1000).toFixed(0)+'K';
+  return String(n);
+}
+function showToast(msg,type){
+  var c=document.getElementById('toasts');
+  var t=document.createElement('div');
+  t.className='toast '+(type||'');
+  t.textContent=msg;
+  c.appendChild(t);
+  setTimeout(function(){if(t.parentNode)t.parentNode.removeChild(t);},4000);
+}
+</script>
+</body>
+</html>
